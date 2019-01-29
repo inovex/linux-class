@@ -29,19 +29,19 @@ Die Authentifizierung der SSH Verbindung zur Kursumgebung basiert zunächst auf 
 
 Hinweis:
 
-- Der Default Benutzer auf der Kursumgebung: `ubuntu`
+- Der Benutzer für die erste Verbindung auf die Kursumgebung ist: `ubuntu`
 
 ### Eigenen Benutzer einrichten
 
 Nachdem eine Session besteht, wird ein eigener Benutzer angelegt. Der neue Benutzer wird im Anschluss modifiziert und um eine "authorized_keys" Datei erweitert. Diese Datei enthält den oben erzeugten SSH Public Key.
 
-- Eigenen Benutzer anlegen 
-- Ein Passwort für den Benutzer vergeben
-- Als neuer Benutzer anmelden
-- Im eigenen Home Directory ein Verzeichnis für ssh config anlegen (Hinweis: `.ssh`)
-- In diesem Ordner eine Datei "authorized_keys" erstellen
-- Die "authorized_keys" soll nur der eigene Benutzer lesen und schreiben können und sonst niemand
-- Den erstellten Public (!) key in die "~/.ssh/authorized_keys" einfügen
+- Eigenen Benutzer anlegen (Hinweis: useradd --create-home --home-dir /home/user --shell /bin/bash)
+- Ein Passwort für den Benutzer vergeben (passwd user)
+- Als neuer Benutzer anmelden (su - passwd)
+- Im eigenen Home Directory ein Verzeichnis für ssh config anlegen (Hinweis: `.ssh`) (mkdir -p /home/user/.ssh)
+- In diesem Ordner eine Datei "authorized_keys" erstellen (touch /home/user/.ssh/authorized_keys)
+- Die "authorized_keys" soll nur der eigene Benutzer lesen und schreiben können und sonst niemand (chmod 600 /home/user/.ssh/authorized_keys)
+- Den erstellten Public (!) key in die "~/.ssh/authorized_keys" einfügen (nano  /home/user/.ssh/authorized_keys)
 
 ### SSH per Public Key
 
@@ -59,15 +59,15 @@ Hinweis:
 
 Nachdem die Public Key Autentifizierung funktioniert wird die Passwort-Authentifizierung deaktiviert. Dazu sind Konfigurationsänderungen am SSH Dienst notwendig. Im Anschluss wird der SSH Dienst neu gestartet.
 
-- Als einfaches Backup eine Kopie der SSH Daemon Config erstellen (`/etc/ssh/sshd_config`)
+- Als einfaches Backup eine Kopie der SSH Daemon Config erstellen (`/etc/ssh/sshd_config`) (cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup)
 - In der SSHD Config folgende Zeilen editieren:
   - `PermitRootLogin yes` wird zu `PermitRootLogin no`
-  - `PasswordAuthentication yes` wird zu `PasswordAuthentication no`
-- Vergleiche die neue Datei mit dem Backup
-- Neustarten des SSH Dienstes
-- Status des SSH Dienste einsehen
+  - `PasswordAuthentication yes` wird zu `PasswordAuthentication no` (nano /etc/ssh/sshd_config)
+- Vergleiche die neue Datei mit dem Backup (diff /etc/ssh/sshd_config /etc/ssh/sshd_config_backup)
+- Neustarten des SSH Dienstes (systemctl restart ssh)
+- Status des SSH Dienste einsehen (systemctl status ssh)
 - Mit einer zusätzlichen Session einloggen und über das Auth.log prüfen wie die Autentifzierung abläuft
-  - `/var/log/auth.log`
+  - `/var/log/auth.log` (tail -f /var/log/auth.log)
 - Versuchen sich per SSH ohne Public Key einzuloggen
 
 ## Bonus
