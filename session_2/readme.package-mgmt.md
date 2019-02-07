@@ -15,7 +15,7 @@ Benutze das Paketverwaltungstool `apt` um das Paket `nginx` zu installieren.
 ### Status eines Dienstes
 
 Stelle mithilfe `systemd` sicher, dass der Dienst `nginx` läuft.
-Überprüfe, ob der Webserver läuft, indem du die auf eurem System gehosteten Webseite aufrufst.
+Überprüfe, ob der Webserver läuft, indem du die auf deinem System gehosteten Webseite aufrufst.
 
 ### Deaktiveren einer Webseitenkonfiguration
 
